@@ -24,6 +24,9 @@ namespace matplotlibcpp {
 			PyObject *s_python_function_xlim;
 			PyObject *s_python_function_ylim;
 			PyObject *s_python_function_title;
+			PyObject *s_python_function_xlabel;
+			PyObject *s_python_function_ylabel;
+			PyObject *s_python_function_grid;
 			PyObject *s_python_empty_tuple;
 
 			/* For now, _interpreter is implemented as a singleton since its currently not possible to have
@@ -62,6 +65,9 @@ namespace matplotlibcpp {
 				s_python_function_legend = PyObject_GetAttrString(pymod, "legend");
 				s_python_function_ylim = PyObject_GetAttrString(pymod, "ylim");
 				s_python_function_title = PyObject_GetAttrString(pymod, "title");
+				s_python_function_xlabel = PyObject_GetAttrString(pymod, "xlabel");
+				s_python_function_ylabel = PyObject_GetAttrString(pymod, "ylabel");
+				s_python_function_grid = PyObject_GetAttrString(pymod, "grid");
 				s_python_function_xlim = PyObject_GetAttrString(pymod, "xlim");
 
 				s_python_function_save = PyObject_GetAttrString(pylabmod, "savefig");
@@ -72,8 +78,12 @@ namespace matplotlibcpp {
 						|| !s_python_function_plot 
 						|| !s_python_function_legend
 						|| !s_python_function_xlim
+						|| !s_python_function_ylim
 						|| !s_python_function_title
-						|| !s_python_function_ylim) 
+						|| !s_python_function_xlabel
+						|| !s_python_function_ylabel
+						|| !s_python_function_grid
+            ) 
 				{ throw std::runtime_error("Couldnt find required function!"); }
 
 				if(!PyFunction_Check(s_python_function_show)
@@ -82,8 +92,12 @@ namespace matplotlibcpp {
 					|| !PyFunction_Check(s_python_function_plot)
 					|| !PyFunction_Check(s_python_function_legend)
 					|| !PyFunction_Check(s_python_function_xlim)
+					|| !PyFunction_Check(s_python_function_ylim) 
 					|| !PyFunction_Check(s_python_function_title)
-					|| !PyFunction_Check(s_python_function_ylim)) 
+					|| !PyFunction_Check(s_python_function_xlabel)
+					|| !PyFunction_Check(s_python_function_ylabel)
+					|| !PyFunction_Check(s_python_function_grid)
+          )
 				{ throw std::runtime_error("Python object is unexpectedly not a PyFunction."); }
 
 				s_python_empty_tuple = PyTuple_New(0);
@@ -260,6 +274,50 @@ namespace matplotlibcpp {
 
 	  //if PyDeCRFF, the show function doesn't wook on Mac OS
 	}
+
+  inline void xlabel(const std::string &str)
+	{
+		PyObject* pystr = PyString_FromString(str.c_str());
+		PyObject* args = PyTuple_New(1);
+		PyTuple_SetItem(args, 0, pystr);
+
+		PyObject* res = PyObject_CallObject(detail::_interpreter::get().s_python_function_xlabel, args);
+		if(!res) throw std::runtime_error("Call to xlabel() failed.");
+
+	  //if PyDeCRFF, the show function doesn't wook on Mac OS
+	}
+
+  inline void ylabel(const std::string &str)
+	{
+		PyObject* pystr = PyString_FromString(str.c_str());
+		PyObject* args = PyTuple_New(1);
+		PyTuple_SetItem(args, 0, pystr);
+
+		PyObject* res = PyObject_CallObject(detail::_interpreter::get().s_python_function_ylabel, args);
+		if(!res) throw std::runtime_error("Call to ylabel() failed.");
+
+	  //if PyDeCRFF, the show function doesn't wook on Mac OS
+	}
+
+  inline void grid(const bool &flag)
+	{
+		PyObject* pyflag;
+    if(flag){
+      pyflag=Py_True;
+    }
+    else{
+      pyflag=Py_False;
+    }
+		PyObject* args = PyTuple_New(1);
+		PyTuple_SetItem(args, 0, pyflag);
+
+		PyObject* res = PyObject_CallObject(detail::_interpreter::get().s_python_function_grid, args);
+		if(!res) throw std::runtime_error("Call to grid() failed.");
+
+	  //if PyDeCRFF, the show function doesn't wook on Mac OS
+	}
+
+
 
 	inline void show()
 	{

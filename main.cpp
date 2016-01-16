@@ -16,6 +16,9 @@ int main(){
   
 	plt::plot(x, y, "--r");
 	plt::title("log");
+	plt::xlabel("x");
+	plt::ylabel("y");
+  plt::grid(true);
   plt::show();
 
   return 0;
