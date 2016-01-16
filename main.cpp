@@ -5,17 +5,16 @@ using namespace std;
 namespace plt = matplotlibcpp;
 
 int main(){
-  cout<<"Hello world"<<endl;
+  cout<<"matplotlib-cpp sample start"<<endl;
 
   int n = 5000;
-	std::vector<double> x(n), y(n), z(n), w(n,2);
-	for(int i=0; i<n; ++i) {
-		x.at(i) = i*i;
-		y.at(i) = sin(2*M_PI*i/360.0);
-		z.at(i) = log(i);
-	}
-
-	plt::plot(x, y);
+  vector<double> x(n), y(n);
+  for(int i=0; i<n; ++i) {
+    x[i] = i;
+    y[i] = sin(2*M_PI*i/360.0);
+  }
+  
+	plt::plot(x, y, "--r");
   plt::show();
 
   return 0;
